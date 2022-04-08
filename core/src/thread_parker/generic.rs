@@ -8,6 +8,7 @@
 //! A simple spin lock based thread parker. Used on platforms without better
 //! parking facilities available.
 
+use crate::pass_time;
 use core::hint::spin_loop;
 use core::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
