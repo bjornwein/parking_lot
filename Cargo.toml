@@ -29,6 +29,7 @@ deadlock_detection = ["parking_lot_core/deadlock_detection"]
 serde = ["lock_api/serde"]
 send_guard = []
 hardware-lock-elision = []
+dce = [ "parking_lot_core/dce" ]
 
 [workspace]
 exclude = ["benchmark"]

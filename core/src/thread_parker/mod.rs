@@ -51,7 +51,10 @@ pub trait UnparkHandleT {
 }
 
 cfg_if! {
-    if #[cfg(any(target_os = "linux", target_os = "android"))] {
+    if #[cfg(feature = "dce")] {
+        #[path = "generic.rs"]
+        mod imp;
+    } else if #[cfg(any(target_os = "linux", target_os = "android"))] {
         #[path = "linux.rs"]
         mod imp;
     } else if #[cfg(unix)] {

@@ -52,12 +52,14 @@
     feature(stdsimd)
 )]
 
+mod dce;
 mod parking_lot;
 mod spinwait;
 mod thread_parker;
 mod util;
 mod word_lock;
 
+pub use self::dce::pass_time;
 pub use self::parking_lot::deadlock;
 pub use self::parking_lot::{park, unpark_all, unpark_filter, unpark_one, unpark_requeue};
 pub use self::parking_lot::{

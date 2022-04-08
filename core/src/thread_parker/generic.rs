@@ -8,8 +8,8 @@
 //! A simple spin lock based thread parker. Used on platforms without better
 //! parking facilities available.
 
-use core::sync::atomic::{AtomicBool, Ordering};
 use core::hint::spin_loop;
+use core::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 use std::time::Instant;
 
@@ -44,6 +44,7 @@ impl super::ThreadParkerT for ThreadParker {
     unsafe fn park(&self) {
         while self.parked.load(Ordering::Acquire) != false {
             spin_loop();
+            pass_time();
         }
     }
 
@@ -54,6 +55,7 @@ impl super::ThreadParkerT for ThreadParker {
                 return false;
             }
             spin_loop();
+            pass_time();
         }
         true
     }

@@ -93,6 +93,7 @@ unsafe impl lock_api::RawMutex for RawMutex {
                 }
                 Err(x) => state = x,
             }
+            parking_lot_core::pass_time();
         }
     }
 
@@ -196,6 +197,7 @@ impl RawMutex {
                 Ok(_) => return true,
                 Err(x) => state = x,
             }
+            parking_lot_core::pass_time();
         }
     }
 
@@ -222,12 +224,14 @@ impl RawMutex {
                     Ok(_) => return true,
                     Err(x) => state = x,
                 }
+                parking_lot_core::pass_time();
                 continue;
             }
 
             // If there is no queue, try spinning a few times
             if state & PARKED_BIT == 0 && spinwait.spin() {
                 state = self.state.load(Ordering::Relaxed);
+                parking_lot_core::pass_time();
                 continue;
             }
 
@@ -240,6 +244,7 @@ impl RawMutex {
                     Ordering::Relaxed,
                 ) {
                     state = x;
+                    parking_lot_core::pass_time();
                     continue;
                 }
             }
@@ -285,6 +290,7 @@ impl RawMutex {
             // Loop back and try locking again
             spinwait.reset();
             state = self.state.load(Ordering::Relaxed);
+            parking_lot_core::pass_time();
         }
     }
 
