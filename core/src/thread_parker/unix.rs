@@ -5,6 +5,7 @@
 // http://opensource.org/licenses/MIT>, at your option. This file may not be
 // copied, modified, or distributed except according to those terms.
 
+use crate::pass_time;
 #[cfg(any(target_os = "macos", target_os = "ios"))]
 use core::ptr;
 use core::{
@@ -75,6 +76,7 @@ impl super::ThreadParkerT for ThreadParker {
         debug_assert_eq!(r, 0);
         while self.should_park.get() {
             let r = libc::pthread_cond_wait(self.condvar.get(), self.mutex.get());
+            pass_time();
             debug_assert_eq!(r, 0);
         }
         let r = libc::pthread_mutex_unlock(self.mutex.get());
@@ -108,6 +110,7 @@ impl super::ThreadParkerT for ThreadParker {
                 let r = libc::pthread_cond_wait(self.condvar.get(), self.mutex.get());
                 debug_assert_eq!(r, 0);
             }
+            pass_time();
         }
         let r = libc::pthread_mutex_unlock(self.mutex.get());
         debug_assert_eq!(r, 0);
